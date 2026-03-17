@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quit Smoking Challenge - Fedy vs Walha</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            color: white;
+            padding: 30px 0;
+        }
+
+        header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        header p {
+            font-size: 1.2em;
+            opacity: 0.9;
+        }
+
+        .winner-banner {
+            background: gold;
+            color: #333;
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 30px;
+            text-align: center;
+            font-size: 1.5em;
+            font-weight: bold;
+            display: none;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.02); }
+        }
+
+        .scoreboard {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 30px;
+            margin-top: 40px;
+        }
+
+        .player-card {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            text-align: center;
+            transition: transform 0.3s ease;
+        }
+
+        .player-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .player-photo {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 5px solid #667eea;
+            margin-bottom: 20px;
+        }
+
+        .player-name {
+            font-size: 2em;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .score {
+            font-size: 3em;
+            color: #667eea;
+            font-weight: bold;
+            margin: 20px 0;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 20px;
+            background: #e9ecef;
+            border-radius: 10px;
+            margin: 20px 0;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            border-radius: 10px;
+            transition: width 0.5s ease;
+            width: 0%;
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .stat-box {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 10px;
+            border: 1px solid #eee;
+        }
+
+        .stat-label {
+            color: #666;
+            font-size: 0.9em;
+            margin-bottom: 5px;
+        }
+
+        .stat-value {
+            color: #333;
+            font-size: 1.3em;
+            font-weight: bold;
+        }
+
+        .controls {
+            margin-top: 30px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .btn {
+            padding: 15px 30px;
+            border: none;
+            border-radius: 10px;
+            font-size: 1em;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: bold;
+            color: white;
+        }
+
+        .btn:hover {
+            opacity: 0.9;
+            transform: scale(1.02);
+        }
+
+        .btn-success { background: #28a745; }
+        .btn-danger { background: #dc3545; }
+        .btn-info { background: #17a2b8; }
+
+        .motivation {
+            background: white;
+            padding: 20px;
+            border-radius: 15px;
+            margin-top: 30px;
+            text-align: center;
+            color: #333;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .motivation h3 {
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+
+        @media (max-width: 768px) {
+            .scoreboard {
+                grid-template-columns: 1fr;
+            }
+            header h1 {
+                font-size: 1.8em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🚭 Quit Smoking Challenge</h1>
+            <p>Fedy vs Walha - Stay Strong, Stay Healthy!</p>
+        </header>
+
+        <div class="winner-banner" id="winnerBanner">
+            🏆 Current Leader: <span id="winnerName"></span> 🏆
+        </div>
+
+        <div class="scoreboard">
+            <!-- Fedy's Card -->
+            <div class="player-card" id="fedyCard">
+                <img src="index (2).jpg" alt="Fedy" class="player-photo">
+                <h2 class="player-name">Fedy</h2>
+                <div class="score" id="fedyScore">0</div>
+                <div class="progress-bar">
+                    <div class="progress-fill" id="fedyProgress"></div>
+                </div>
+                <div class="stats">
+                    <div class="stat-box">
+                        <div class="stat-label">Days Clean</div>
+                        <div class="stat-value" id="fedyDays">0</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-label">Cigarettes</div>
+                        <div class="stat-value" id="fedyCigarettes">0</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-label">Health</div>
+                        <div class="stat-value" id="fedyHealth">100</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-label">Streak</div>
+                        <div class="stat-value" id="fedyStreak">0</div>
+                    </div>
+                </div>
+                <div class="controls">
+                    <button class="btn btn-success" onclick="addDay('fedy')">✅ Smoke-Free Day</button>
+                    <button class="btn btn-danger" onclick="addCigarette('fedy')">🚬 I Smoked</button>
+                    <button class="btn btn-info" onclick="resetPlayer('fedy')">🔄 Reset</button>
+                </div>
+            </div>
+
+            <!-- Walha's Card -->
+            <div class="player-card" id="walhaCard">
+                <img src="index (1).jpg" alt="Walha" class="player-photo">
+                <h2 class="player-name">Walha</h2>
+                <div class="score" id="walhaScore">0</div>
+                <div class="progress-bar">
+                    <div class="progress-fill" id="walhaProgress"></div>
+                </div>
+                <div class="stats">
+                    <div class="stat-box">
+                        <div class="stat-label">Days Clean</div>
+                        <div class="stat-value" id="walhaDays">0</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-label">Cigarettes</div>
+                        <div class="stat-value" id="walhaCigarettes">0</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-label">Health</div>
+                        <div class="stat-value" id="walhaHealth">100</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-label">Streak</div>
+                        <div class="stat-value" id="walhaStreak">0</div>
+                    </div>
+                </div>
+                <div class="controls">
+                    <button class="btn btn-success" onclick="addDay('walha')">✅ Smoke-Free Day</button>
+                    <button class="btn btn-danger" onclick="addCigarette('walha')">🚬 I Smoked</button>
+                    <button class="btn btn-info" onclick="resetPlayer('walha')">🔄 Reset</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="motivation">
+            <h3>💪 Daily Motivation</h3>
+            <p id="motivationText">Loading motivation...</p>
+        </div>
+    </div>
+
+    <script>
+        // Player data structure
+        const players = {
+            fedy: {
+                days: 0,
+                cigarettes: 0,
+                health: 100,
+                streak: 0,
+                score: 0
+            },
+            walha: {
+                days: 0,
+                cigarettes: 0,
+                health: 100,
+                streak: 0,
+                score: 0
+            }
+        };
+
+        // Motivational quotes
+        const motivations = [
+            "Every cigarette you don't smoke is a victory for your health!",
+            "Your future self will thank you for staying strong today!",
+            "One day at a time - you've got this!",
+            "Breathing free feels amazing - keep going!",
+            "Your health is worth more than any cigarette!",
+            "You're stronger than your addiction!",
+            "Each smoke-free day makes you healthier!",
+            "Believe in yourself - you can do this!"
+        ];
+
+        // Load data from browser storage when page opens
+        function loadData() {
+            const saved = localStorage.getItem('quitSmokingData');
+            if (saved) {
+                const data = JSON.parse(saved);
+                if (data.fedy) players.fedy = { ...players.fedy, ...data.fedy };
+                if (data.walha) players.walha = { ...players.walha, ...data.walha };
+            }
+            updateDisplay();
+        }
+
+        // Save data to browser storage
+        function saveData() {
+            localStorage.setItem('quitSmokingData', JSON.stringify(players));
+        }
+
+        // Calculate score based on rules
+        function calculateScore(playerKey) {
+            const p = players[playerKey];
+            p.score = (p.days * 100) - (p.cigarettes * 50) + (p.streak * 10) + (p.health * 2);
+            if (p.score < 0) p.score = 0;
+            return p.score;
+        }
+
+        // Update the HTML elements with current data
+        function updateDisplay() {
+            ['fedy', 'walha'].forEach(player => {
+                const p = players[player];
+                calculateScore(player);
+                
+                document.getElementById(`${player}Score`).textContent = p.score;
+                document.getElementById(`${player}Days`).textContent = p.days;
+                document.getElementById(`${player}Cigarettes`).textContent = p.cigarettes;
+                document.getElementById(`${player}Health`).textContent = p.health;
+                document.getElementById(`${player}Streak`).textContent = p.streak;
+                
+                const progress = Math.min((p.days / 100) * 100, 100);
+                document.getElementById(`${player}Progress`).style.width = `${progress}%`;
+            });
+
+            checkWinner();
+            updateMotivation();
+        }
+
+        // Update motivation text
+        function updateMotivation() {
+            const randomQuote = motivations[Math.floor(Math.random() * motivations.length)];
+            document.getElementById('motivationText').textContent = randomQuote;
+        }
+
+        // Action: Add a smoke-free day
+        function addDay(player) {
+            players[player].days++;
+            players[player].streak++;
+            players[player].health = Math.min(players[player].health + 5, 100);
+            saveData();
+            updateDisplay();
+        }
+
+        // Action: Record a cigarette (relapse)
+        function addCigarette(player) {
+            if(confirm("Are you sure you want to record a cigarette? This will lower your score.")) {
+                players[player].cigarettes++;
+                players[player].streak = 0;
+                players[player].health = Math.max(players[player].health - 10, 0);
+                saveData();
+                updateDisplay();
+            }
+        }
+
+        // Action: Reset player progress
+        function resetPlayer(player) {
+            if (confirm(`Are you sure you want to reset ${player.toUpperCase()}'s progress?`)) {
+                players[player] = {
+                    days: 0,
+                    cigarettes: 0,
+                    health: 100,
+                    streak: 0,
+                    score: 0
+                };
+                saveData();
+                updateDisplay();
+            }
+        }
+
+        // Check who is winning
+        function checkWinner() {
+            const banner = document.getElementById('winnerBanner');
+            const winnerName = document.getElementById('winnerName');
+            
+            if (players.fedy.score > players.walha.score && players.fedy.score > 0) {
+                banner.style.display = 'block';
+                winnerName.textContent = 'Fedy';
+                banner.style.background = '#ffd700';
+            } else if (players.walha.score > players.fedy.score && players.walha.score > 0) {
+                banner.style.display = 'block';
+                winnerName.textContent = 'Walha';
+                banner.style.background = '#ffd700';
+            } else if (players.fedy.score === players.walha.score && players.fedy.score > 0) {
+                banner.style.display = 'block';
+                winnerName.textContent = "It's a Tie!";
+                banner.style.background = '#c0c0c0';
+            } else {
+                banner.style.display = 'none';
+            }
+        }
+
+        // Initialize the app when page loads
+        window.onload = loadData;
+    </script>
+</body>
+</html>
